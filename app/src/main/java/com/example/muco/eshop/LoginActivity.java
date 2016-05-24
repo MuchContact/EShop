@@ -26,26 +26,27 @@ import rx.schedulers.Schedulers;
 public class LoginActivity extends AppCompatActivity {
     public static final String TAG = "Login";
 
-//    private Observer<UserDto> observer = new Observer<UserDto>() {
-//
-//        @Override
-//        public void onCompleted() {
-//            System.out.println("complete");
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//
-//        @Override
-//        public void onError(Throwable e) {
-//            System.out.println("error");
-//        }
-//
-//        @Override
-//        public void onNext(UserDto userDto) {
-//            Log.e(TAG, "next");
-//        }
-//    };
+    private Observer<UserDto> observer = new Observer<UserDto>() {
+
+        @Override
+        public void onCompleted() {
+            System.out.println("complete");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            setErrorMessageAndRequestFocus(username, getString(R.string.error_incorrect_login));
+            setErrorMessageAndRequestFocus(password, getString(R.string.error_incorrect_login));
+        }
+
+        @Override
+        public void onNext(UserDto userDto) {
+            Log.e(TAG, "next");
+        }
+    };
 
     @Bind(R.id.username)
     EditText username;
@@ -60,28 +61,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.login)
-    public void login(){
+    public void login() {
         resetErrors();
         LoginService loginService = ServiceRepository.loginService();
-        try {
-            Response<UserDto> response = loginService.login(username.getText().toString(), password.getText().toString()).execute();
-            System.out.println(String.format("Rsponse code: %d", response.code()));
-            if(response.isSuccessful()) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        setErrorMessageAndRequestFocus(username, getString(R.string.error_incorrect_login));
-        setErrorMessageAndRequestFocus(password, getString(R.string.error_incorrect_login));
-//        loginService
-//                .login(username.getText().toString(), password.getText().toString())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(observer);
+        loginService
+                .login(username.getText().toString(), password.getText().toString())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 
     private void resetErrors() {

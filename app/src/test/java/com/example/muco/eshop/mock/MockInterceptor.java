@@ -1,4 +1,4 @@
-package com.example.muco.eshop;
+package com.example.muco.eshop.mock;
 
 import com.example.muco.eshop.util.FileUtil;
 

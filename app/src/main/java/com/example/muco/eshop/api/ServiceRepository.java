@@ -11,7 +11,7 @@ public class ServiceRepository {
     private static LoginService loginService;
     public static OkHttpClient okHttpClient = null;
     private static Converter.Factory gsonConverterFactory = GsonConverterFactory.create();
-//    private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
+    private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
 
     public static LoginService loginService() {
         if (loginService == null) {
@@ -19,7 +19,7 @@ public class ServiceRepository {
                     .client(okHttpClient)
                     .baseUrl("http://localhost")
                     .addConverterFactory(gsonConverterFactory)
-//                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
                     .build();
             loginService = retrofit.create(LoginService.class);
         }

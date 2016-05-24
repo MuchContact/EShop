@@ -4,8 +4,10 @@ package com.example.muco.eshop;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.muco.eshop.api.ServiceRepository;
+import com.example.muco.eshop.mock.MockInterceptor;
 
 import org.hamcrest.core.Is;
 import org.junit.Before;
@@ -34,6 +36,9 @@ public class LoginActivityTest {
     private static final String JSON_ROOT_PATH = "/json/";
     private String jsonFullPath;
     private final LoginActivity loginActivity = Robolectric.setupActivity(LoginActivity.class);
+    private EditText username;
+    private EditText password;
+    private Button login;
 
     @Before
     public void setUp() throws Exception {
@@ -41,6 +46,10 @@ public class LoginActivityTest {
         Field loginService = ServiceRepository.class.getDeclaredField("loginService");
         loginService.setAccessible(true);
         loginService.set(null, null);
+
+        username = loginActivity.username;
+        password = loginActivity.password;
+        login = (Button) loginActivity.findViewById(R.id.login);
     }
 
     @Test
@@ -48,10 +57,9 @@ public class LoginActivityTest {
         OkHttpClient okHttpClient = getMockHttpClient("login_success.json", 200);
         ServiceRepository.okHttpClient = okHttpClient;
 
-
-        loginActivity.username.setText("muco");
-        loginActivity.password.setText("right_password");
-        ((Button) loginActivity.findViewById(R.id.login)).performClick();
+        username.setText("muco");
+        password.setText("right_password");
+        login.performClick();
 
         ShadowApplication instance = ShadowApplication.getInstance();
         Intent nextActivity = instance.getNextStartedActivity();
@@ -64,14 +72,14 @@ public class LoginActivityTest {
         OkHttpClient okHttpClient = getMockHttpClient("login_fail.json", 400);
         ServiceRepository.okHttpClient = okHttpClient;
 
-        loginActivity.username.setText("muco");
-        loginActivity.password.setText("wrong_password");
-        ((Button) loginActivity.findViewById(R.id.login)).performClick();
+        username.setText("muco");
+        password.setText("wrong_password");
+        login.performClick();
 
         ShadowApplication application = ShadowApplication.getInstance();
         assertThat("Next activity should not started", application.getNextStartedActivity(), Is.is(nullValue()));
-        assertThat("Show error for Email field ", loginActivity.username.getError(), Is.is(notNullValue()));
-        assertThat("Show error for Password field ", loginActivity.password.getError(), Is.is(notNullValue()));
+        assertThat("Show error for Email field ", username.getError(), Is.is(notNullValue()));
+        assertThat("Show error for Password field ", password.getError(), Is.is(notNullValue()));
     }
 
     @NonNull

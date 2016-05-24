@@ -24,7 +24,6 @@ public class WelcomeActivityTest {
     public void should_navigate_to_main_activity() throws Exception {
         Robolectric.setupActivity(WelcomeActivity.class);
         ShadowApplication instance = ShadowApplication.getInstance();
-        TimeUnit.SECONDS.sleep(5);
         Intent nextStartedActivity = instance.getNextStartedActivity();
         assertNotNull(nextStartedActivity);
         String className = nextStartedActivity.getComponent().getClassName();

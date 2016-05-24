@@ -9,6 +9,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowLooper;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,9 +21,12 @@ import static org.junit.Assert.*;
 @Config(constants = BuildConfig.class, sdk = 21)
 public class WelcomeActivityTest {
 
-    @Ignore
+    @Test
     public void should_navigate_to_main_activity() throws Exception {
         Robolectric.setupActivity(WelcomeActivity.class);
+
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
+
         ShadowApplication instance = ShadowApplication.getInstance();
         Intent nextStartedActivity = instance.getNextStartedActivity();
         assertNotNull(nextStartedActivity);

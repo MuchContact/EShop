@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EShop</string>
+    <string name="username">Username</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="error_incorrect_login">Password/Email is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+</resources>

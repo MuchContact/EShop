@@ -6,23 +6,33 @@ import android.support.annotation.NonNull;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.muco.eshop.api.LoginService;
 import com.example.muco.eshop.api.ServiceRepository;
 import com.example.muco.eshop.mock.MockInterceptor;
 
 import org.hamcrest.core.Is;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.Field;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Response;
+import rx.Scheduler;
+import rx.android.plugins.RxAndroidPlugins;
+import rx.android.plugins.RxAndroidSchedulersHook;
+import rx.plugins.RxJavaPlugins;
+import rx.plugins.RxJavaSchedulersHook;
+import rx.schedulers.Schedulers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -40,8 +50,25 @@ public class LoginActivityTest {
     private EditText password;
     private Button login;
 
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        RxJavaPlugins.getInstance().registerSchedulersHook(new RxJavaSchedulersHook() {
+            @Override
+            public Scheduler getIOScheduler() {
+                return Schedulers.immediate();
+            }
+        });
+    }
+
     @Before
     public void setUp() throws Exception {
+        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
+            @Override
+            public Scheduler getMainThreadScheduler() {
+                return Schedulers.immediate();
+            }
+        });
+
         jsonFullPath = getClass().getResource(JSON_ROOT_PATH).toURI().getPath();
         Field loginService = ServiceRepository.class.getDeclaredField("loginService");
         loginService.setAccessible(true);
@@ -50,6 +77,11 @@ public class LoginActivityTest {
         username = loginActivity.username;
         password = loginActivity.password;
         login = (Button) loginActivity.findViewById(R.id.login);
+    }
+
+    @After
+    public void tearDown() {
+        RxAndroidPlugins.getInstance().reset();
     }
 
     @Test
@@ -78,7 +110,7 @@ public class LoginActivityTest {
 
         ShadowApplication application = ShadowApplication.getInstance();
         assertThat("Next activity should not started", application.getNextStartedActivity(), Is.is(nullValue()));
-        assertThat("Show error for Email field ", username.getError(), Is.is(notNullValue()));
+        assertThat("Show error for Username field ", username.getError(), Is.is(notNullValue()));
         assertThat("Show error for Password field ", password.getError(), Is.is(notNullValue()));
     }
 

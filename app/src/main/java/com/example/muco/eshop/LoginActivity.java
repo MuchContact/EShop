@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            e.printStackTrace();
             setErrorMessageAndRequestFocus(username, getString(R.string.error_incorrect_login));
             setErrorMessageAndRequestFocus(password, getString(R.string.error_incorrect_login));
         }
@@ -66,11 +65,14 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         resetErrors();
         LoginService loginService = ServiceRepository.loginService();
+
         loginService
                 .login(username.getText().toString(), password.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+        System.out.println("login clicked");
+
     }
 
     private void resetErrors() {

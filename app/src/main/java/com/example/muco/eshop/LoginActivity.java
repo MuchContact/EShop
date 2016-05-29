@@ -2,6 +2,7 @@ package com.example.muco.eshop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -31,13 +32,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onCompleted() {
             System.out.println("complete");
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
         }
 
         @Override
         public void onError(Throwable e) {
+            e.printStackTrace();
             setErrorMessageAndRequestFocus(username, getString(R.string.error_incorrect_login));
             setErrorMessageAndRequestFocus(password, getString(R.string.error_incorrect_login));
         }
@@ -45,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onNext(UserDto userDto) {
             Log.e(TAG, "next");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     };
 
@@ -66,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         LoginService loginService = ServiceRepository.loginService();
         loginService
                 .login(username.getText().toString(), password.getText().toString())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }

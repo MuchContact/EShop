@@ -1,6 +1,8 @@
 package com.example.muco.eshop;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import org.junit.Ignore;
 import org.junit.Test;

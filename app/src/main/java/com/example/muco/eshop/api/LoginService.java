@@ -11,5 +11,5 @@ import rx.Observable;
 public interface LoginService {
     @FormUrlEncoded
     @POST("authentication")
-    Observable<UserDto> login(@Field("username") String username, @Field("password") String password);
+    Observable<UserDto> login(@Field("user_name") String username, @Field("password") String password);
 }

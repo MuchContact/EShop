@@ -1,10 +1,9 @@
 package com.example.muco.eshop;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.widget.EditText;
@@ -14,17 +13,14 @@ import com.example.muco.eshop.api.LoginService;
 import com.example.muco.eshop.api.ServiceRepository;
 import com.example.muco.eshop.api.UserDto;
 
-import java.io.IOException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Response;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     public static final String TAG = "Login";
 
     private Observer<UserDto> observer = new Observer<UserDto>() {

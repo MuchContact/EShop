@@ -2,17 +2,11 @@ package com.example.muco.eshop;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
-import com.example.muco.eshop.api.LoginService;
-
-import java.util.concurrent.TimeUnit;
-
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
